@@ -1,0 +1,1 @@
+richpyro>=1.0.0   # Telegram rich-message cards (pulls Kurigram/Pyrogram)

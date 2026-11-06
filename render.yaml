@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: ssc-marks-analyser
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.api:app --host 0.0.0.0 --port $PORT --workers ${WEB_CONCURRENCY:-1} --log-level warning
+    healthCheckPath: /api/healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: OUTBOUND_CONCURRENCY
+        value: "64"
+      - key: SHEET_CONCURRENCY
+        value: "200"
+      - key: CACHE_TTL
+        value: "1800"
+      - key: CACHE_SIZE
+        value: "5000"
+      - key: RATE_PER_MIN
+        value: "30"
+      - key: MAX_ACTIVE_PER_IP
+        value: "4"
+      - key: HTTP2
+        value: "1"
+      - key: ALLOWED_HOSTS
+        value: "cbexams.com"
+      - key: WEB_CONCURRENCY
+        value: "1"
+
+  # Optional: the Telegram front-end as a background worker.
+  # Uncomment + set TG_TOKEN in the dashboard to use it.
+  #
+  # - type: worker
+  #   name: ssc-marks-telegram
+  #   runtime: python
+  #   plan: starter
+  #   buildCommand: pip install -r requirements.txt
+  #   startCommand: python -m app.tg
+  #   envVars:
+  #     - key: TG_TOKEN
+  #       sync: false
+  #     - key: OUTBOUND_CONCURRENCY
+  #       value: "32"
+  #     - key: ALLOWED_HOSTS
+  #       value: "cbexams.com"

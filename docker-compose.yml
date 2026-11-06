@@ -1,0 +1,42 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      OUTBOUND_CONCURRENCY: "64"     # max in-flight requests to cbexams
+      SHEET_CONCURRENCY: "200"       # max sheets being crawled at once
+      CACHE_TTL: "1800"              # same link reused for 30 min
+      CACHE_SIZE: "5000"
+      RATE_PER_MIN: "30"             # per IP
+      MAX_ACTIVE_PER_IP: "4"
+      ALLOWED_HOSTS: "cbexams.com"
+      WEB_CONCURRENCY: "1"
+    # no published port: nginx fronts it
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/healthz',timeout=4).status==200 else 1)"]
+      interval: 30s
+      timeout: 6s
+      retries: 3
+
+  proxy:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+
+  # optional: telegram front-end, same crawler, same cache policy
+  bot:
+    build: .
+    restart: unless-stopped
+    profiles: ["bot"]
+    environment:
+      TG_TOKEN: "${TG_TOKEN}"
+      OUTBOUND_CONCURRENCY: "32"
+      ALLOWED_HOSTS: "cbexams.com"
+    command: ["python", "-m", "app.tg"]
+    depends_on:
+      - web

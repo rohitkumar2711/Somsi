@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.git/
+.github/
+*.log
+*.zip
+tests/
+mock/
+bench_inproc.py
+loadtest.py
+README.md

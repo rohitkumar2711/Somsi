@@ -1,0 +1,72 @@
+{
+  "name": "ssc-marks-analyser",
+  "description": "Paste an SSC candidate response sheet link, get section-wise and total marks with negative marking.",
+  "repository": "https://github.com/rohitkumar2711/Somsi",
+  "logo": "https://raw.githubusercontent.com/rohitkumar2711/Somsi/main/deploy/logo.svg",
+  "keywords": ["ssc", "cgl", "marks", "answer-key", "fastapi", "python"],
+  "stack": "heroku-22",
+  "buildpacks": [{ "url": "heroku/python" }],
+  "formation": {
+    "web": { "quantity": 1, "size": "eco" }
+  },
+  "healthchecks": {
+    "web": [
+      {
+        "type": "web",
+        "name": "api",
+        "path": "/api/healthz"
+      }
+    ]
+  },
+  "env": {
+    "OUTBOUND_CONCURRENCY": {
+      "description": "Max simultaneous requests to cbexams.com",
+      "value": "64",
+      "required": false
+    },
+    "SHEET_CONCURRENCY": {
+      "description": "Max sheets crawled at the same time",
+      "value": "200",
+      "required": false
+    },
+    "CACHE_TTL": {
+      "description": "Seconds a scored sheet stays cached",
+      "value": "1800",
+      "required": false
+    },
+    "CACHE_SIZE": {
+      "description": "How many sheets to keep in cache",
+      "value": "5000",
+      "required": false
+    },
+    "RATE_PER_MIN": {
+      "description": "Requests per minute per IP",
+      "value": "30",
+      "required": false
+    },
+    "MAX_ACTIVE_PER_IP": {
+      "description": "Concurrent sheets per IP",
+      "value": "4",
+      "required": false
+    },
+    "HTTP2": {
+      "description": "Use HTTP/2 to cbexams (needs the h2 package, already in requirements)",
+      "value": "1",
+      "required": false
+    },
+    "ALLOWED_HOSTS": {
+      "description": "Comma separated fetch allowlist (SSRF guard)",
+      "value": "cbexams.com",
+      "required": false
+    },
+    "WEB_CONCURRENCY": {
+      "description": "uvicorn workers. Keep 1 unless you put a sticky proxy in front",
+      "value": "1",
+      "required": false
+    },
+    "TG_TOKEN": {
+      "description": "Optional Telegram bot token - enables the /bot front-end",
+      "required": false
+    }
+  }
+}
