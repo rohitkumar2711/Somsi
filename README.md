@@ -1,5 +1,16 @@
 # SSC Marks Analyser — "link daalo, marks lo"
 
+<p align="left">
+  <a href="https://render.com/deploy?repo=https://github.com/rohitkumar2711/Somsi"><img src="deploy/deploy-render.png" alt="Deploy to Render" height="34"></a>
+  &nbsp;
+  <a href="https://heroku.com/deploy?template=https://github.com/rohitkumar2711/Somsi"><img src="deploy/deploy-heroku.png" alt="Deploy to Heroku" height="34"></a>
+</p>
+
+**One-click deploy:**
+[Render](https://render.com/deploy?repo=https://github.com/rohitkumar2711/Somsi) ·
+[Heroku](https://heroku.com/deploy?template=https://github.com/rohitkumar2711/Somsi) ·
+[Docker / VPS](#run-it)
+
 A deployable service: paste a candidate-response-sheet link, get section-wise +
 total marks, correct / wrong / skipped per section, accuracy, wrong question
 numbers, and the same answers scored under every SSC marking scheme.
@@ -24,19 +35,7 @@ matching the colours on the page.
 
 ---
 
-## Deploy in one click
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rohitkumar2711/Somsi)
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/rohitkumar2711/Somsi)
-
-The buttons point at `rohitkumar2711`. Either edit that in this file, or run
-
-```bash
-./publish.sh your-github-username
-```
-
-which rewrites every link, creates the repo and pushes it. Then the two buttons
-above are live on your own repo page.
+## Deploy options
 
 What each platform picks up:
 

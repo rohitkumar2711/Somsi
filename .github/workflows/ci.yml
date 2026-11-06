@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: unit tests
+        run: python3 tests/test_parser.py
+      - name: app boots and serves the page
+        run: |
+          uvicorn app.api:app --port 8010 --log-level warning &
+          for i in $(seq 1 30); do curl -sf localhost:8010/api/healthz && break; sleep 0.5; done
+          curl -sf localhost:8010/ | grep -q 'id="url"'
+          curl -sf localhost:8010/api/schemes | grep -q 'cgl-t1'
+          kill %1
+      - name: capacity benchmark (app only, no network)
+        run: python3 bench_inproc.py --users 300 --distinct 20 --upstream-ms 50
